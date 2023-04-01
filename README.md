@@ -38,4 +38,4 @@
 ## Running as containers and using vars in container
 
 - Run container >> `docker run -d -e TOKEN=value -e SHORTTOK=value <CONTAINER-NAME>` 
-    - Note:Test without `-d` first
+    - Note: Test without `-d` first to see if container is running/responding
