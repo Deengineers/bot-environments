@@ -33,3 +33,6 @@
 
 - [No Hello Bot](https://github.com/Deengineers/no-hello-bot)
 - [Job Bot](https://github.com/Deengineers/discord-job-bot)
+    - Set SHORT-TOK >> `export SHORT-TOK=PUT-SHORT-TOKEN-HERE`
+    - Set TOKEN >> `export TOKEN=PUT-DISCORD-TOKEN-HERE`
+    - Set ChannelID > `export JOBBOARDCHANNEL=<CHANNELID-HERE>`
