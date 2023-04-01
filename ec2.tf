@@ -19,6 +19,8 @@ resource "aws_instance" "discord_bot" {
               sudo systemctl start docker
               sudo systemctl enable docker
               sudo usermod -a -G docker ec2-user
+              sudo git clone https://github.com/Deengineers/no-hello-bot.git
+              sudo git clone https://github.com/Deengineers/discord-job-bot
               EOF
 
   tags = {
