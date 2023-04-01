@@ -5,7 +5,7 @@ resource "aws_instance" "discord_bot" {
 
   iam_instance_profile = aws_iam_instance_profile.ec2_instance_profile.name
 
-  key_name = aws_key_pair.discord_bot_key.key_name
+  key_name = aws_key_pair.id_rsa.key_name
   #   security_groups        = [aws_security_group.allow_ssh.name]
   subnet_id              = aws_subnet.discord_bot_subnet.id
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]

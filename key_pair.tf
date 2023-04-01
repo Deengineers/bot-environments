@@ -1,4 +1,4 @@
-resource "aws_key_pair" "discord_bot_key" {
-  key_name   = "discord_bot_key"
-  public_key = file("~/.ssh/aws_pair.pub")
+resource "aws_key_pair" "id_rsa" {
+  key_name   = "id_rsa"
+  public_key = file("~/.ssh/id_rsa.pub")
 }
