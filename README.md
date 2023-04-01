@@ -7,9 +7,9 @@
 ## Steps to create environment
 
 1. Export access keys and auth needed to authenticate your AWS with TF
-    - export AWS_ACCESS_KEY_ID=
-    - export AWS_SECRET_ACCESS_KEY=
-    - export AWS_DEFAULT_REGION=
+    - export AWS_ACCESS_KEY_ID=AKIAR22NW6U3ALFMTWBL
+    - export AWS_SECRET_ACCESS_KEY=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
+    - export AWS_DEFAULT_REGION=eu-west-2
 
 2. Terraform init
 
