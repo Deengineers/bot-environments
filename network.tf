@@ -58,7 +58,7 @@ resource "aws_route_table" "example" {
 resource "aws_route_table_association" "example" {
   subnet_id      = aws_subnet.discord_bot_subnet.id
   route_table_id = aws_route_table.example.id
-  
+
   depends_on = [
     aws_route_table.example
   ]
