@@ -32,6 +32,10 @@ resource "aws_eip" "example" {
 
 resource "aws_internet_gateway" "gateway" {
   vpc_id = aws_vpc.bot.id
+
+  tags = {
+    Name = "example-route-table"
+  }
 }
 
 resource "aws_route_table" "example" {
@@ -42,6 +46,10 @@ resource "aws_route_table" "example" {
     gateway_id = aws_internet_gateway.gateway.id
   }
 
+  depends_on = [
+    aws_eip.example
+  ]
+
   tags = {
     Name = "example-route-table"
   }
@@ -50,4 +58,8 @@ resource "aws_route_table" "example" {
 resource "aws_route_table_association" "example" {
   subnet_id      = aws_subnet.discord_bot_subnet.id
   route_table_id = aws_route_table.example.id
+  
+  depends_on = [
+    aws_route_table.example
+  ]
 }
