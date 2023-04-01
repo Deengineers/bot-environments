@@ -39,9 +39,20 @@ jobs:
       if: github.event_name == 'pull_request'
       run: terraform plan -no-color
       continue-on-error: true
+      
+    - name: Terraform Show
+      if: github.ref == 'refs/heads/main'
+      id: show
+      run: |
+        output=$(terraform show -json)
+        if [[ -z "$output" || "$output" == *"\"values\": {}"* ]]; then
+          echo "::set-output name=apply_required::true"
+        else
+          echo "::set-output name=apply_required::false"
+        fi
 
     - name: Terraform Apply
-      if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/main' && steps.show.outputs.apply_required == 'true'
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
