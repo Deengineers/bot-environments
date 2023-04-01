@@ -34,9 +34,9 @@
 ## Create AWS resources via automatedCICD pipeline (GitHub workflow)
 
 1. Put your credentials and key pair into GitHub secrets
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        TF_VAR_public_key: ${{ secrets.PUBLIC_KEY }}
+    - `AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}`
+    - `AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}`
+    - `TF_VAR_public_key: ${{ secrets.PUBLIC_KEY }}`
 
 2. Trigger the pipeline and wait for your resources to be created. 
 
