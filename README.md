@@ -15,3 +15,8 @@
 ## What is this environment for?
 
 - Any bots we create as @Deengineers.
+
+## Current bots:
+
+- [No Hello Bot](https://github.com/Deengineers/no-hello-bot)
+- [Job Bot](https://github.com/Deengineers/discord-job-bot)
