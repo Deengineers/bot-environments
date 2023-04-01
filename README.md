@@ -37,4 +37,5 @@
 
 ## Running as containers and using vars in container
 
-- docker run -e TOKEN=value -e SHORTTOK=value <CONTAINER-NAME>
+- Run container >> `docker run -d -e TOKEN=value -e SHORTTOK=value <CONTAINER-NAME>` 
+    - Note:Test without `-d` first
