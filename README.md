@@ -9,12 +9,25 @@
 3. Terraform apply
 
 4. Once done, SSH into your instance using command:
-    - `ssh -i ~/.ssh/discord_rsa.pub ec2-user@<INSTANCE_PUBLIC_IP>`
+    - `ssh -i ~/.ssh/id_rsa.pub ec2-user@<INSTANCE_PUBLIC_IP>`
 
+5. To SSH into the instance from the machine you need to add this block into the `sg.tf` file.
+
+```
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["your.public.ip.address/32"]
+  }
+}
+```
 
 ## What is this environment for?
 
 - Any bots we create as @Deengineers.
+
+
 
 ## Current bots:
 
