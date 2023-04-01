@@ -10,3 +10,8 @@
 
 4. Once done, SSH into your instance using command:
     - `ssh -i ~/.ssh/discord_rsa.pub ec2-user@<INSTANCE_PUBLIC_IP>`
+
+
+## What is this environment for?
+
+- Any bots we create as @Deengineers.
