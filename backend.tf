@@ -6,9 +6,9 @@ resource "aws_s3_bucket" "tfbackend" {
   lifecycle {
     prevent_destroy = true
   }
-  tags {
-    Name = "S3 Remote Terraform State Store"
-  }
+#   tags {
+#     Name = "S3 Remote Terraform State Store"
+#   }
 }
 # create a dynamodb table for locking the state file
 resource "aws_dynamodb_table" "tflock" {
@@ -22,7 +22,7 @@ resource "aws_dynamodb_table" "tflock" {
     type = "S"
   }
 
-  tags {
-    Name = "DynamoDB Terraform State Lock Table"
-  }
+#   tags {
+#     Name = "DynamoDB Terraform State Lock Table"
+#   }
 }
