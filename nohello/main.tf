@@ -123,6 +123,50 @@ resource "aws_ecs_service" "main" {
     assign_public_ip = true
   }
 }
+resource "aws_iam_policy" "cloud_user_policy" {
+  name        = "CloudUserPolicy"
+  description = "Policy with necessary permissions for cloud_user"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = [
+          "ec2:CreateSecurityGroup",
+          "ec2:CreateVpc",
+          "kms:CreateKey",
+          "ecr:CreateRepository",
+          "ecs:CreateCluster",
+          "iam:CreateRole",
+          "iam:AttachRolePolicy",
+          "iam:PutRolePolicy",
+          "ecs:RegisterTaskDefinition",
+          "ecs:CreateService",
+          "ecs:UpdateService",
+          "ecs:DeleteService",
+          "ecs:DeregisterTaskDefinition",
+          "ec2:AuthorizeSecurityGroupIngress",
+          "ec2:RevokeSecurityGroupIngress",
+          "ec2:DeleteSecurityGroup",
+          "ec2:DeleteVpc",
+          "kms:DeleteKey",
+          "ecr:DeleteRepository",
+          "ecs:DeleteCluster",
+          "iam:DetachRolePolicy",
+          "iam:DeleteRole"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+resource "aws_iam_user_policy_attachment" "cloud_user_policy_attachment" {
+  policy_arn = aws_iam_policy.cloud_user_policy.arn
+  user       = "cloud_user"
+}
+
+
 
 
 # module "fargate" {
