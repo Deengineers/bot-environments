@@ -1,0 +1,138 @@
+name: Deploy to Amazon ECS
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: no-hello-bot
+  K8S_NAMESPACE: default
+  K8S_DEPLOYMENT_NAME: no-hello-bot
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # - name: Configure AWS credentials
+    #   uses: aws-actions/configure-aws-credentials@v1
+    #   with:
+    #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #     aws-region: ${{ env.AWS_REGION }}
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - name: Terraform Init
+      working-directory: nohello
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        TF_VAR_public_key: ${{ secrets.PUBLIC_KEY }}
+      run: terraform init
+
+    - name: Terraform format
+      working-directory: nohello
+      run: terraform fmt   
+
+    - name: Terraform Validate
+      working-directory: nohello
+      run: terraform validate
+
+    - name: Terraform Plan
+      if: github.ref == 'refs/heads/main'
+      id: plan
+      working-directory: nohello
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        TF_VAR_public_key: ${{ secrets.PUBLIC_KEY }}
+      run: |
+        set +e
+        output=$(terraform plan -input=false -lock=false -no-color -out tf.plan)
+        changes=$(echo "$output" | grep "No changes")
+        if [[ -z "$changes" ]]; then
+          echo "APPLY_REQUIRED=true" >> $GITHUB_ENV
+        else
+          echo "APPLY_REQUIRED=false" >> $GITHUB_ENV
+        fi
+      continue-on-error: true
+      
+    # - name: Terraform Show
+    #   if: github.ref == 'refs/heads/main'
+    #   id: show
+    #   run: |
+    #     output=$(terraform show -no-color tf.plan 2>&1 > /tmp/plan.txt)
+    #     if [[ -z "$output" || "$output" == *"\"values\": {}"* ]]; then
+    #       echo "SHOW_APPLY_REQUIRED=true" >> $GITHUB_ENV
+    #     else
+    #       echo "SHOW_APPLY_REQUIRED=false" >> $GITHUB_ENV
+    #     fi
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && env.APPLY_REQUIRED == 'true'
+      working-directory: nohello
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        TF_VAR_public_key: ${{ secrets.PUBLIC_KEY }}
+      run: terraform apply -auto-approve -input=false tf.plan
+
+
+    # - name: Login to Amazon ECR
+    #   id: login-ecr
+    #   uses: aws-actions/amazon-ecr-login@v1
+
+    # - name: Build and push Docker image
+    #   uses: docker/build-push-action@v2
+    #   with:
+    #     context: .
+    #     push: true
+    #     tags: ${{ steps.login-ecr.outputs.registry }}/no-hello-bot:${{ github.sha }}
+
+    # - name: Install and configure AWS CLI
+    #   run: |
+    #     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    #     unzip awscliv2.zip
+    #     sudo ./aws/install
+    #     echo 'export PATH=$PATH:/usr/local/bin/aws' >> $GITHUB_ENV
+
+    # - name: Create ECS cluster
+    #   run: |
+    #     aws ecs create-cluster --cluster-name hello-bot-cluster
+
+    # - name: Register ECS task definition
+    #   run: |
+    #     aws ecs register-task-definition \
+    #       --family hello-bot-task \
+    #       --execution-role-arn REPLACE_WITH_EXECUTION_ROLE_ARN \
+    #       --container-definitions '[{
+    #         "name": "no-hello-bot",
+    #         "image": "${{ steps.login-ecr.outputs.registry }}/no-hello-bot:${{ github.sha }}",
+    #         "essential": true,
+    #         "portMappings": [{
+    #           "containerPort": 8888,
+    #           "hostPort": 8888
+    #         }]
+    #       }]'
+
+    # - name: Create ECS service
+    #   run: |
+    #     aws ecs create-service \
+    #       --cluster hello-bot-cluster \
+    #       --service-name hello-bot-service \
+    #       --task-definition hello-bot-task \
+    #       --desired-count 1 \
+    #       --launch-type FARGATE \
+    #       --network-configuration "awsvpcConfiguration={subnets=[REPLACE_WITH_SUBNET_ID_1,REPLACE_WITH_SUBNET_ID_2],assignPublicIp=ENABLED}"
+
+    # - name: Update ECS service
+    #   run: |
+    #     aws ecs update-service --cluster hello-bot-cluster --service hello-bot-service --force-new-deployment
+
