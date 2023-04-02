@@ -22,7 +22,7 @@ resource "aws_dynamodb_table" "tflock" {
     type = "S"
   }
 
-#   tags {
-#     Name = "DynamoDB Terraform State Lock Table"
-#   }
+  #   tags {
+  #     Name = "DynamoDB Terraform State Lock Table"
+  #   }
 }

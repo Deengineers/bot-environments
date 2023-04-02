@@ -5,6 +5,10 @@ terraform {
       version = "~> 3.0"
     }
   }
+  backend "s3" {
+    region = "us-west-1"
+    key    = "terraform.tfstate"
+  }
 
   # backend "s3" {
   #   bucket         = "tfstate"
