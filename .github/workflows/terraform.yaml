@@ -40,6 +40,10 @@ jobs:
 
     - name: Terraform Plan
       if: github.ref == 'refs/heads/main'
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        TF_VAR_public_key: ${{ secrets.PUBLIC_KEY }}
       run: terraform plan -no-color
       continue-on-error: true
       
