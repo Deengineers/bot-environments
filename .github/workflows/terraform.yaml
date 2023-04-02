@@ -55,16 +55,16 @@ jobs:
         fi
       continue-on-error: true
       
-    - name: Terraform Show
-      if: github.ref == 'refs/heads/main'
-      id: show
-      run: |
-        output=$(terraform show -json)
-        if [[ -z "$output" || "$output" == *"\"values\": {}"* ]]; then
-          echo "SHOW_APPLY_REQUIRED=true" >> $GITHUB_ENV
-        else
-          echo "SHOW_APPLY_REQUIRED=false" >> $GITHUB_ENV
-        fi
+    # - name: Terraform Show
+    #   if: github.ref == 'refs/heads/main'
+    #   id: show
+    #   run: |
+    #     output=$(terraform show -json)
+    #     if [[ -z "$output" || "$output" == *"\"values\": {}"* ]]; then
+    #       echo "SHOW_APPLY_REQUIRED=true" >> $GITHUB_ENV
+    #     else
+    #       echo "SHOW_APPLY_REQUIRED=false" >> $GITHUB_ENV
+    #     fi
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && env.APPLY_REQUIRED == 'true'
