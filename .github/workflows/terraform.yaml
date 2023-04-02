@@ -46,6 +46,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         TF_VAR_public_key: ${{ secrets.PUBLIC_KEY }}
       run: |
+        set +e
         output=$(terraform plan -input=false -lock=false -no-color -out=tfplan)
         changes=$(echo "$output" | grep "No changes")
         if [[ -z "$changes" ]]; then
