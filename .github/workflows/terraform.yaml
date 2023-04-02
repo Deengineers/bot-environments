@@ -34,6 +34,7 @@ jobs:
       uses: hashicorp/setup-terraform@v1
 
     - name: Terraform Init
+      working-directory: base
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -41,14 +42,17 @@ jobs:
       run: terraform init
 
     - name: Terraform format
+      working-directory: base
       run: terraform fmt   
 
     - name: Terraform Validate
+      working-directory: base
       run: terraform validate
 
     - name: Terraform Plan
       if: github.ref == 'refs/heads/main'
       id: plan
+      working-directory: base
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -77,6 +81,7 @@ jobs:
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && env.APPLY_REQUIRED == 'true'
+      working-directory: base
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
