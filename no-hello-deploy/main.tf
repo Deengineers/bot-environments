@@ -63,7 +63,7 @@ module "fargate" {
         ]
         environment = [
           {
-            name  = "BOT_TOKEN"
+            name  = "TOKEN"
             value = aws_kms_key.main.arn
           }
         ]
