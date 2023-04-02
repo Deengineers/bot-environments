@@ -74,3 +74,19 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         TF_VAR_public_key: ${{ secrets.PUBLIC_KEY }}
       run: terraform apply -auto-approve -input=false tfplan
+
+    - name: Check if commit message contains "destroy"
+      id: check_commit_message
+      run: |
+        commit_message=$(git log --format=%B -n 1 ${{ github.event.after }})
+        if [[ $commit_message == *"destroy"* ]]; then
+          echo "::set-output name=destroy_required::true"
+        else
+          echo "::set-output name=destroy_required::false"
+        fi
+
+    - name: Terraform Destroy
+      if: steps.check_commit_message.outputs.destroy_required == 'true'
+      run: |
+        terraform init -input=false
+        terraform destroy -auto-approve
