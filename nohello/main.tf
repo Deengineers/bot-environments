@@ -168,38 +168,3 @@ resource "aws_iam_user_policy_attachment" "cloud_user_policy_attachment" {
 
 
 
-
-# module "fargate" {
-#   source  = "terraform-aws-modules/ecs/aws//modules/fargate-service"
-
-#   name_prefix   = local.app_name
-#   ecs_cluster_arn = aws_ecs_cluster.main.arn
-
-#   task_definition_json = jsonencode({
-#     family = local.app_name
-#     containerDefinitions = [
-#       {
-#         name      = local.app_name
-#         image     = "${aws_ecr_repository.main.repository_url}:latest"
-#         essential = true
-#         portMappings = [
-#           {
-#             containerPort = 80
-#             hostPort      = 80
-#           }
-#         ]
-#         environment = [
-#           {
-#             name  = "TOKEN"
-#             value = aws_kms_key.main.arn
-#           }
-#         ]
-#       }
-#     ]
-#   })
-
-#   security_group_ids = [aws_security_group.allow_http.id]
-#   subnet_ids         = aws_subnet.main.id
-
-#   load_balancer_arn = aws_lb.main
-# }
